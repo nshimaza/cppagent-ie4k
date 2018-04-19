@@ -1,0 +1,27 @@
+descriptor-schema-version: "2.2"
+info:
+  name: cppagent-ie4k
+  description: "MTConnect Agent"
+  version: "1.4.0.10"
+  author-link: "http://mtcup.org/"
+  author-name: "System Insights, Inc."
+app:
+  cpuarch: ppc
+  env:
+    PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  resources:
+    cpu: "50"
+    disk: "2"
+    memory: "64"
+    network:
+    - interface-name: eth0
+      ports:
+        tcp:
+        - "5000"
+    profile: custom
+  startup:
+    rootfs: rootfs.img
+    target:
+    - /bin/sh
+    - /usr/local/bin/start_agent.sh
+  type: docker
