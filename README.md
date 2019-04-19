@@ -13,64 +13,41 @@ Building process consists of following steps.
 
 ## Prepare your environment
 
-Before you start, you need to perform two steps bellow.
-
-* Install `ioxclient`
-* Let Docker login to [github.cisco.com](github.cisco.com).
+Before you start, you need to have `ioxclient` installed.
 
 `ioxclient` is a developer tool used for manipulating IOx environment.
 It will be used for creating IOx application from a Docker image.
+You can download `ioxclient` from
+[DevNet IOx resource download page](https://developer.cisco.com/docs/iox/#!iox-resource-downloads).
 
 Cisco provides Docker image tailored for IOx application.  It can be used both
-for build environment and runtime environment.  The image is distributed via [github.cisco.com](github.cisco.com).  You need to let your
-Docker logged in to the side with following command so that you can obtain
-the image during `docker build` process.
+for build environment and runtime environment.  The image is distributed via
+[devhub.cisco.com](devhub.cisco.com).
 
-```shell-session
-$ docker login -u iox_docker.gen -p AKCp2WX2yZXhwiQXG2xZjHvnrov8HA2HkXZyH3Z46ErGNMDz1fHQKAMRCBbEvseLowd7BQ8S1 devhub-docker.cisco.com
-```
-
-Consult to [Cisco DevNet site](https://developer.cisco.com/site/iox/docs/#docker-images-and-packages-repository) for more detail.
-
-## Build executable in Docker image
-
-Build MTConnect Agent executable using Docker image from Cisco.
-The Dockerfile under build directory does it for you.
-Execute following command.
-
-```shell-session
-$ cd build
-$ docker build -t cppagent-ie4k-build .
-```
-
-You will get a Docker image tagged with "cpp-agent-ie4k-build".
-
-## Extract executable from the image
-
-The executable is built at /opt/src/cppagent/agent/agent.
-You can extract it by executing following command.
-
-```shell-session
-$ cd ../runtime
-$ docker run --rm -ti --volume "`pwd`:/vol" cppagent-ie4k-build /bin/sh /copy.sh
-```
-
-You will get 32-bit PowerPC executable file named "agent" on your working directory.
+Consult to
+[Cisco DevNet site](https://developer.cisco.com/docs/iox/#!docker-images-and-packages-repository/overview)
+for more detail.
 
 ## Build runtime Docker image
 
-Make sure you already have a 32-bit PowerPC executable file named "agent" under runtime directory.
-
-The Dockerfile under the runtime directory builds a Docker image which
-contains the "agent" executable and necessary dynamic libraries for you.
-To get the image, execute following command under runtime directory.
+The `Dockerfile` under `runtime` folder builds `cppagent` binary and Docker
+image for runtime for you.  Execute following commands.
 
 ```shell-session
+$ cd runtime
 $ docker build -t cppagent-ie4k .
 ```
 
-You will get a Docker image tagged with "cppagent-ie4k".
-The image contains agent executable and start-up shell script.
+The Dockerfile under `runtime` is a multi-stage Dockerfile.  The first stage
+pulls all dependency for building `cppagent` and compile it.  The second stage
+copies the `cppagent` binary from the first image then setup dependency only
+necessary for runtime.
+
+You will get a Docker image tagged with "cppagent-ie4k".  The image contains
+agent executable and start-up shell script.  The agent executable is located
+at `/usr/local/bin/agent`.  Startup shell script is located at
+`user/local/bin/start_agent.sh`.  `start_agent.sh` can be a startup script for
+IOx app.
 
 ## Convert Docker image to IOx app
 
@@ -84,4 +61,15 @@ $ cd ../app
 $ ioxclient docker package cppagent-ie4k .
 ```
 
-You will get `packaget.tar` which is IOx application package installable to IE-4000.
+You will get `packaget.tar` which is IOx application package installable to
+IE-4000.
+
+## Build environment
+
+`Dockerfile` under `build` folder creates a build environment for `cppagent`.
+It pulls source Docker image for IOx app and all dependencies for building
+`cppagent` then compile it.  You can leverage this environment for developing
+your own version of `cppagent` IOx app.
+
+You don't have to create this image just to get runtime image.  `Dockerfile`
+under `runtime` folder does it for you automatically.
