@@ -5,7 +5,7 @@ running open source C++ MTConnect Agent on Cisco Industrial Ethernet 4000 Series
 Switches.  This demonstrates how you can build and package IOx apps for IE4000.
 
 With this procedure, using Cisco provided Docker image from
-(devhub-docker.cisco.com)[devhub-docker.cisco.com] is vital.  The image contains
+[devhub-docker.cisco.com](devhub-docker.cisco.com) is vital.  The image contains
 PowerPC binaries and executed under QEMU emulated environment so that you can
 run the binaries in the docker image as if they are x86 native binaries.  This
 simplifies build and test environment where you can compile and run PowerPC code
