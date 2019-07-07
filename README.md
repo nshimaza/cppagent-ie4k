@@ -42,7 +42,7 @@ image for runtime for you.  Execute following commands.
 
 ```shell-session
 $ cd runtime
-$ docker build -t cppagent-ie4k .
+$ sudo docker build -t cppagent-ie4k .
 ```
 
 The Dockerfile under `runtime` is a multi-stage Dockerfile.  The first stage
@@ -65,7 +65,7 @@ Navigate to the directory `app` and execute following command.
 
 ```shell-session
 $ cd ../app
-$ ioxclient docker package cppagent-ie4k .
+$ sudo ioxclient docker package cppagent-ie4k .
 ```
 
 You will get `packaget.tar` which is IOx application package installable to
