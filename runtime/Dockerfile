@@ -29,7 +29,7 @@ RUN cd /opt/src && \
     cmake . && \
     make agent
 
-FROM devhub-docker.cisco.com/iox-docker/ir800/base-rootfs
+FROM devhub-docker.cisco.com/iox-docker/ie4k/base-rootfs
 
 COPY --from=build-env /opt/src/cppagent/agent/agent /usr/local/bin/
 ADD start_agent.sh /usr/local/bin/
